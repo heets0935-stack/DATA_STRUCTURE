@@ -1,0 +1,340 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+struct Student
+{
+    int rollNo;
+    string name;
+    float marks[3];
+    float total;
+    float average;
+};
+
+Student *s = nullptr;
+int n = 0;
+
+// Calculate Total and Average
+void calculateMarks(int i)
+{
+    s[i].total = s[i].marks[0] +
+                 s[i].marks[1] +
+                 s[i].marks[2];
+
+    s[i].average = s[i].total / 3;
+}
+
+// Add Students
+void addStudent()
+{
+    int count;
+
+    cout << "\nHow many students do you want to add? ";
+    cin >> count;
+
+    if (count <= 0)
+    {
+        cout << "\nInvalid number of students!\n";
+        return;
+    }
+
+    Student *temp = new Student[n + count];
+
+    for (int i = 0; i < n; i++)
+        temp[i] = s[i];
+
+    delete[] s;
+    s = temp;
+
+    for (int i = n; i < n + count; i++)
+    {
+        cout << "\nEnter Roll No: ";
+        cin >> s[i].rollNo;
+
+        cout << "Enter Name: ";
+        cin >> s[i].name;
+
+        cout << "Enter marks of 3 subjects: ";
+        cin >> s[i].marks[0]
+            >> s[i].marks[1]
+            >> s[i].marks[2];
+
+        calculateMarks(i);
+    }
+
+    n += count;
+
+    cout << "\nStudents added successfully!\n";
+}
+
+// Display Students
+void displayStudents()
+{
+    if (n == 0)
+    {
+        cout << "\nNo student records found!\n";
+        return;
+    }
+
+    cout << "\nRoll No\tName\tMarks1\tMarks2\tMarks3\tTotal\tAverage\n";
+
+    for (int i = 0; i < n; i++)
+    {
+        cout << s[i].rollNo << "\t"
+             << s[i].name << "\t"
+             << s[i].marks[0] << "\t"
+             << s[i].marks[1] << "\t"
+             << s[i].marks[2] << "\t"
+             << s[i].total << "\t"
+             << s[i].average << endl;
+    }
+}
+
+// Delete Student
+void deleteStudent()
+{
+    int roll, pos = -1;
+
+    cout << "\nEnter Roll No to delete: ";
+    cin >> roll;
+
+    for (int i = 0; i < n; i++)
+    {
+        if (s[i].rollNo == roll)
+        {
+            pos = i;
+            break;
+        }
+    }
+
+    if (pos == -1)
+    {
+        cout << "\nStudent not found!\n";
+        return;
+    }
+
+    for (int i = pos; i < n - 1; i++)
+        s[i] = s[i + 1];
+
+    n--;
+
+    cout << "\nStudent deleted successfully!\n";
+}
+
+// Search by Roll Number
+void searchByRoll()
+{
+    int roll;
+
+    cout << "\nEnter Roll No to search: ";
+    cin >> roll;
+
+    for (int i = 0; i < n; i++)
+    {
+        if (s[i].rollNo == roll)
+        {
+            cout << "\nStudent Found!\n";
+            cout << "Roll No: " << s[i].rollNo << endl;
+            cout << "Name: " << s[i].name << endl;
+            cout << "Total: " << s[i].total << endl;
+            cout << "Average: " << s[i].average << endl;
+            return;
+        }
+    }
+
+    cout << "\nStudent not found!\n";
+}
+
+// Search by Name
+void searchByName()
+{
+    string name;
+
+    cout << "\nEnter Name to search: ";
+    cin >> name;
+
+    for (int i = 0; i < n; i++)
+    {
+        if (s[i].name == name)
+        {
+            cout << "\nStudent Found!\n";
+            cout << "Roll No: " << s[i].rollNo << endl;
+            cout << "Name: " << s[i].name << endl;
+            cout << "Total: " << s[i].total << endl;
+            cout << "Average: " << s[i].average << endl;
+            return;
+        }
+    }
+
+    cout << "\nStudent not found!\n";
+}
+
+// Sort by Marks (Highest to Lowest)
+void sortByMarks()
+{
+    Student temp;
+
+    for (int i = 0; i < n - 1; i++)
+    {
+        for (int j = 0; j < n - i - 1; j++)
+        {
+            if (s[j].total < s[j + 1].total)
+            {
+                temp = s[j];
+                s[j] = s[j + 1];
+                s[j + 1] = temp;
+            }
+        }
+    }
+
+    cout << "\nStudents sorted by marks successfully!\n";
+}
+
+// Sort by Name
+void sortByName()
+{
+    Student temp;
+
+    for (int i = 0; i < n - 1; i++)
+    {
+        for (int j = 0; j < n - i - 1; j++)
+        {
+            if (s[j].name > s[j + 1].name)
+            {
+                temp = s[j];
+                s[j] = s[j + 1];
+                s[j + 1] = temp;
+            }
+        }
+    }
+
+    cout << "\nStudents sorted by name successfully!\n";
+}
+
+// Calculate Total and Average
+void showTotalAverage()
+{
+    if (n == 0)
+    {
+        cout << "\nNo student records found!\n";
+        return;
+    }
+
+    for (int i = 0; i < n; i++)
+    {
+        calculateMarks(i);
+
+        cout << "\nName: " << s[i].name;
+        cout << "\nTotal: " << s[i].total;
+        cout << "\nAverage: " << s[i].average << endl;
+    }
+}
+
+// Find Highest and Lowest Marks
+void findHighestLowest()
+{
+    if (n == 0)
+    {
+        cout << "\nNo student records found!\n";
+        return;
+    }
+
+    int highest = 0, lowest = 0;
+
+    for (int i = 1; i < n; i++)
+    {
+        if (s[i].total > s[highest].total)
+            highest = i;
+
+        if (s[i].total < s[lowest].total)
+            lowest = i;
+    }
+
+    cout << "\n===== RESULT ANALYSIS =====\n";
+
+    cout << "\nHighest Marks:";
+    cout << "\nName: " << s[highest].name;
+    cout << "\nRoll No: " << s[highest].rollNo;
+    cout << "\nTotal: " << s[highest].total << endl;
+
+    cout << "\nLowest Marks:";
+    cout << "\nName: " << s[lowest].name;
+    cout << "\nRoll No: " << s[lowest].rollNo;
+    cout << "\nTotal: " << s[lowest].total << endl;
+}
+
+// Main Function
+int main()
+{
+    int choice;
+
+    do
+    {
+        cout << "\n\n========================================";
+        cout << "\n     STUDENT MARKS MANAGEMENT SYSTEM";
+        cout << "\n========================================";
+        cout << "\n1. Add Student(s)";
+        cout << "\n2. Display Students";
+        cout << "\n3. Delete Student";
+        cout << "\n4. Search by Roll No";
+        cout << "\n5. Search by Name";
+        cout << "\n6. Sort by Marks";
+        cout << "\n7. Sort by Name";
+        cout << "\n8. Calculate Total & Average";
+        cout << "\n9. Find Highest & Lowest";
+        cout << "\n10. Exit";
+
+        cout << "\n\nEnter your choice: ";
+        cin >> choice;
+
+        switch (choice)
+        {
+        case 1:
+            addStudent();
+            break;
+
+        case 2:
+            displayStudents();
+            break;
+
+        case 3:
+            deleteStudent();
+            break;
+
+        case 4:
+            searchByRoll();
+            break;
+
+        case 5:
+            searchByName();
+            break;
+
+        case 6:
+            sortByMarks();
+            break;
+
+        case 7:
+            sortByName();
+            break;
+
+        case 8:
+            showTotalAverage();
+            break;
+
+        case 9:
+            findHighestLowest();
+            break;
+
+        case 10:
+            cout << "\nThank you!\n";
+            break;
+
+        default:
+            cout << "\nInvalid choice!\n";
+        }
+
+    } while (choice != 10);
+
+    delete[] s;
+    return 0;
+}
